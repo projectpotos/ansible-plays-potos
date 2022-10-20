@@ -1,0 +1,6 @@
+# .gitignore
+
+# ansible
+*.retry
+*.swp
+roles/**

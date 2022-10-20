@@ -1,0 +1,13 @@
+---
+
+- name: Verify
+  hosts: all
+  gather_facts: no
+
+  tasks:
+  - name: check if some background exists
+    ansible.builtin.shell:
+      cmd: ls -p /usr/share/backgrounds | grep -v / | wc -l
+    register: out
+    failed_when:
+      - not out.stdout 0

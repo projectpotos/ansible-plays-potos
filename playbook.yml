@@ -1,0 +1,43 @@
+--
+
+- name: Potos system configuration
+  hosts: localhost
+  connection: local
+  become: True
+  gather_facts: True
+  ignore_errors: True
+
+  vars:
+    # define default run type
+    potos_runtype: "daily"
+
+  pre_tasks:
+    # To make sure that this task always executes, it is tagged with the special
+    # tag "always". Therefore do not remove this tag!
+    - name: template requirements.yml file
+      ansible.builtin.template:
+        src: "requirements.yml.j2"
+        dest: "{{ playbook_dir }}/requirements.yml"
+        owner: root
+        group: root
+        mode: 0644
+      tags:
+        - always
+
+    - name: get required roles with ansible galaxy
+      ansible.builtin.command:
+        cmd: /usr/bin/ansible-galaxy install -f -r requirements.yml -p roles/
+      changed_when: false
+      tags:
+        - always
+
+  tasks:
+    - name: run all the required roles
+      include_role:
+        name: "{{ potos_playbook_role }}"
+        apply:
+          tags:
+            - always
+      loop: "{{ lookup('file','requirements.yml') | from_yaml | map(attribute='name') | list }}"
+      loop_control:
+        loop_var: "potos_playbook_role"

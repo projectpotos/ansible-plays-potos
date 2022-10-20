@@ -1,0 +1,13 @@
+
+---
+
+- name: Prepare
+  hosts: all
+  gather_facts: yes
+
+  tasks:
+  # Update the apt cache as it's potentialy outdated in the container
+  - name: update pacman cache
+    ansible.builtin.command:
+      apt update && apt upgrade -y
+    when: ansible_distribution == 'Ubuntu'
