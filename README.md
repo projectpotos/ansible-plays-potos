@@ -1,6 +1,6 @@
 # Ansible Playbook - Potos
 
-A magic all inclusive playbook for your custom linux client based on Potos
+All inclusive, magic playbook for your custom Potos Linux Clients.
 
 [![Test](https://github.com/projectpotos/ansible-playbook-potos/actions/workflows/test.yml/badge.svg)](https://github.com/projectpotos/ansible-playbook-potos/actions/workflows/test.yml)
 

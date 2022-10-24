@@ -7,7 +7,8 @@
   tasks:
   - name: check if some background exists
     ansible.builtin.shell:
-      cmd: ls -p /usr/share/backgrounds | grep -v / | wc -l
+      cmd: 'ls -p /usr/share/backgrounds | grep -v / | wc -l'
     register: out
+    changed_when: false
     failed_when:
-      - not out.stdout 0
+      - out.stdout != '0'
