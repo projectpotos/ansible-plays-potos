@@ -10,7 +10,7 @@
   pre_tasks:
     - name: read specs repo configuration
       ansible.builtin.include_vars:
-        file: "/etc/potos/specs_repo.yml"
+        file: '/etc/potos/specs_repo.yml'
         name: potos_specs_repo
     - name: Get specs repo for {{ potos_specs.client_name }}
       ansible.builtin.command:
@@ -23,12 +23,12 @@
   tasks:
     - name: Check if specs exists
       ansible.builtin.stat:
-        path: "{{ playbook_dir }}/specs"
+        path: '{{ playbook_dir }}/specs'
       register: check_potos_specs
 
     - name: Error handling
       ansible.builtin.debug:
-        msg: "Unable to find an potos specs repo for {{ potos_specs.client_name }}"
+        msg: 'Unable to find an potos specs repo for {{ potos_specs.client_name }}'
       when: not check_potos_specs.stat.exists
 
     - name: Configure playbook for {{ potos_client_name }} with specs
@@ -37,53 +37,52 @@
 
         - name: Get templates
           ansible.builtin.find:
-            path: "{{ playbook_dir }}/specs/templates"
+            path: '{{ playbook_dir }}/specs/templates'
             recurse: yes
             file_type: file
           register: potos_playbook_specs_templates
 
         - name: Apply templates
           ansible.builtin.template:
-            src: "{{ item.path }}"
-            dest: "{{ item.path | regex_replace('^(.*?)\/specs\/templates(.*?)(\.j2)$', '\\1\\2') }}"
+            src: '{{ item.path }}'
+            dest: '{{ item.path | regex_replace("^(.*?)\/specs\/templates(.*?)(\.j2)$", "\\1\\2") }}'
           loop:
-            - "{{ potos_playbook_specs.files }}"
+            - '{{ potos_playbook_specs.files }}'
 
         - name: Get files to copy
           ansible.builtin.find:
-            path: "{{ playbook_dir }}/specs/files"
+            path: '{{ playbook_dir }}/specs/files'
             recurse: yes
             file_type: file
           register: potos_playbook_specs_files
-   
+
         - name: Copy files
           ansible.builtin.copy:
-            src: "{{ item.path }}"
-            dest: "{{ item.path | regex_replace('^(.*?)\/specs\/files(.*?)$', '\\1\\2') }}"
+            src: '{{ item.path }}'
+            dest: '{{ item.path | regex_replace("^(.*?)\/specs\/files(.*?)$", "\\1\\2") }}'
           loop:
-            - "{{ potos_playbook_specs.files }}"
+            - '{{ potos_playbook_specs.files }}'
 
         - name: Get vars to copy
           ansible.builtin.find:
-            path: "{{ playbook_dir }}/specs/vars"
+            path: '{{ playbook_dir }}/specs/vars'
             recurse: yes
             file_type: file
           register: potos_playbook_specs_vars
-   
+
         - name: Copy vars
           ansible.builtin.copy:
-            src: "{{ item.path }}"
-            dest: "{{ item.path | regex_replace('^(.*?)\/specs\/vars(.*?)$', '\\1/host_vars/all\\2') }}"
+            src: '{{ item.path }}'
+            dest: '{{ item.path | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\\1/host_vars/all\\2") }}'
           loop:
-            - "{{ potos_playbook_specs.files }}" 
+            - '{{ potos_playbook_specs.files }}'
 
         - name: Install required collections
           ansible.builtin.command:
-            cmd: /usr/bin/ansible-galaxy collection install -r collections.yml -p /etc/ansible/collections
+            cmd: '/usr/bin/ansible-galaxy collection install -r collections.yml -p /etc/ansible/collections'
           changed_when: False
 
       rescue:
         - name: Error handling
           ansible.builtin.debug:
-            msg: "Error while deploying {{ potos_client_name }} ansible vars"
-
+            msg: 'Error while deploying {{ potos_client_name }} ansible vars'

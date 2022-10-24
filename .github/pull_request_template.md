@@ -1,10 +1,11 @@
 ## Description
 
-Please include a summary of the change and which issue is fixed. Please provide the motivation for why this change is necessary at this stage of the product development cycle.
+Please include a summary of the changes and which issue is fixed. Describe the
+rational why the changes are required at this stage.
 
 Fixes # (issue)
 
-## Depedencies
+## Dependencies
 
 Does this PR depend on other PRs of this or a related repository?
 

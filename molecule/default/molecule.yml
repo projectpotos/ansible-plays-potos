@@ -8,9 +8,9 @@ driver:
 
 platforms:
   - name: instance
-    image: ubuntu:22.04
+    image: ghcr.io/projectpotos/ubuntu22-ansible-test:latest
     pre_build_image: yes
-    command: /sbin/init
+    command: /lib/systemd/systemd
     privileged: yes
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
