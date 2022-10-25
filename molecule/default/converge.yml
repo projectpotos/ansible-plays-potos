@@ -4,5 +4,12 @@
   hosts: all
   gather_facts: yes
 
-  roles:
-    - role: ./
+  tasks:
+    - name: Run prepare
+      ansible.builtin.command:
+        cmd: '{{ item }}'
+        chdir: '/potos'
+      changed_when: false
+      loop:
+        - 'ansible-playbook -e "potos_runtype=daily" /potos/prepare.yml'
+        - 'ansible-playbook -e "potos_runtype=daily" /potos/playbook.yml'
