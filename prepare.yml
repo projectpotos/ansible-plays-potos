@@ -15,7 +15,7 @@
     - name: Get specs repo for {{ potos_specs.client_name }}
       ansible.builtin.command:
         cmd: >
-          /usr/bin/ansible-galaxy install -f
+          ansible-galaxy install -f
           {{ potos_specs_repo.git_url }}/{{ potos_specs_repo.git_repo }}.git,{{ potos_specs_repo.git_branch }},specs
           -p /
       changed_when: False
@@ -42,12 +42,18 @@
             file_type: file
           register: potos_playbook_specs_templates
 
+        - name: Create parent dir for templates
+          ansible.builtin.file:
+            path: '{{ item | regex_replace("^(.*?)\/specs\/templates(.*?)(\.j2)$", "\1\2") | dirname}}'
+            state: 'directory'
+            recurse: yes
+          loop: '{{ potos_playbook_specs_templates.files | map(attribute="path") | list }}'
+
         - name: Apply templates
           ansible.builtin.template:
             src: '{{ item.path }}'
             dest: '{{ item.path | regex_replace("^(.*?)\/specs\/templates(.*?)(\.j2)$", "\\1\\2") }}'
-          loop:
-            - '{{ potos_playbook_specs.files }}'
+          loop: '{{ potos_playbook_specs_templates.files | map(attribute="path") | list }}'
 
         - name: Get files to copy
           ansible.builtin.find:
@@ -56,12 +62,18 @@
             file_type: file
           register: potos_playbook_specs_files
 
+        - name: Create parent dir for files
+          ansible.builtin.file:
+            path: '{{ item | regex_replace("^(.*?)\/specs\/files(.*?)$", "\1\2") | dirname}}'
+            state: 'directory'
+            recurse: yes
+          loop: '{{ potos_playbook_specs_files.files | map(attribute="path") | list }}'
+
         - name: Copy files
           ansible.builtin.copy:
             src: '{{ item.path }}'
             dest: '{{ item.path | regex_replace("^(.*?)\/specs\/files(.*?)$", "\\1\\2") }}'
-          loop:
-            - '{{ potos_playbook_specs.files }}'
+          loop: '{{ potos_playbook_specs_files.files | map(attribute="path") | list }}'
 
         - name: Get vars to copy
           ansible.builtin.find:
@@ -70,16 +82,23 @@
             file_type: file
           register: potos_playbook_specs_vars
 
+        - name: Create parent dir for vars
+          ansible.builtin.file:
+            path: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/all\2") | dirname}}'
+            state: 'directory'
+            recurse: yes
+          loop: '{{ potos_playbook_specs_vars.files | map(attribute="path") | list }}'
+
         - name: Copy vars
           ansible.builtin.copy:
             src: '{{ item.path }}'
             dest: '{{ item.path | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\\1/host_vars/all\\2") }}'
-          loop:
-            - '{{ potos_playbook_specs.files }}'
+          loop: '{{ potos_playbook_specs_vars.files | map(attribute="path") | list }}'
 
         - name: Install required collections
           ansible.builtin.command:
-            cmd: '/usr/bin/ansible-galaxy collection install -r collections.yml -p /etc/ansible/collections'
+            cmd: 'ansible-galaxy collection install -r collections.yml -p /etc/ansible/collections'
+            chdir: '{{ playbook_dir }}'
           changed_when: False
 
       rescue:
