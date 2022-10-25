@@ -2,7 +2,8 @@
 
 All inclusive, magic playbook for your custom Potos Linux Clients.
 
-[![Test](https://github.com/projectpotos/ansible-playbook-potos/actions/workflows/test.yml/badge.svg)](https://github.com/projectpotos/ansible-playbook-potos/actions/workflows/test.yml)
+[![Test](https://github.com/projectpotos/ansible-plays-potos/actions/workflows/test.yml/badge.svg)](https://github.com/projectpotos/ansible-plays-potos/actions/workflows/test.yml)
+
 
 # Dependencies
 
