@@ -11,13 +11,12 @@
     - name: read specs repo configuration
       ansible.builtin.include_vars:
         file: '/etc/potos/specs_repo.yml'
-        name: potos_specs_repo
+        name: potos_specs
     - name: Get specs repo for {{ potos_specs.client_name }}
-      ansible.builtin.command:
-        cmd: >
-          ansible-galaxy install -f
-          {{ potos_specs_repo.git_url }}/{{ potos_specs_repo.git_repo }}.git,{{ potos_specs_repo.git_branch }},specs
-          -p /
+      ansible.builtin.git:
+        repo: '{{ potos_specs.git_url }}/{{ potos_specs.git_repo }}.git'
+        dest: '{{ playbook_dir }}/specs'
+        version: '{{ potos_specs.git_branch }}'
       changed_when: False
       failed_when: False
   tasks:
@@ -51,8 +50,8 @@
 
         - name: Apply templates
           ansible.builtin.template:
-            src: '{{ item.path }}'
-            dest: '{{ item.path | regex_replace("^(.*?)\/specs\/templates(.*?)(\.j2)$", "\\1\\2") }}'
+            src: '{{ item }}'
+            dest: '{{ item | regex_replace("^(.*?)\/specs\/templates(.*?)(\.j2)$", "\1\2") }}'
           loop: '{{ potos_playbook_specs_templates.files | map(attribute="path") | list }}'
 
         - name: Get files to copy
@@ -71,8 +70,8 @@
 
         - name: Copy files
           ansible.builtin.copy:
-            src: '{{ item.path }}'
-            dest: '{{ item.path | regex_replace("^(.*?)\/specs\/files(.*?)$", "\\1\\2") }}'
+            src: '{{ item }}'
+            dest: '{{ item | regex_replace("^(.*?)\/specs\/files(.*?)$", "\1\2") }}'
           loop: '{{ potos_playbook_specs_files.files | map(attribute="path") | list }}'
 
         - name: Get vars to copy
@@ -91,8 +90,8 @@
 
         - name: Copy vars
           ansible.builtin.copy:
-            src: '{{ item.path }}'
-            dest: '{{ item.path | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\\1/host_vars/all\\2") }}'
+            src: '{{ item }}'
+            dest: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/all\2") }}'
           loop: '{{ potos_playbook_specs_vars.files | map(attribute="path") | list }}'
 
         - name: Install required collections

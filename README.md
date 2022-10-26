@@ -7,12 +7,12 @@ All inclusive, magic playbook for your custom Potos Linux Clients.
 
 # Dependencies
 
-You need your own specification repository defined as with the example below `ansible-specs-potos` in the file `/etc/potos/specs_repo.yml`
+You need your own specification repository defined as with the example below [`ansible-specs-potos`](https://github.com/projectpotos/ansible-specs-potos) in the file `/etc/potos/specs_repo.yml`
 
 ```
 ---
 client_name: "Potos Vanilla"
-git_url: "git+https://github.com/projectpotos/"
+git_url: "https://github.com/projectpotos/"
 git_repo: "ansible-specs-potos"
 git_branch: "main"
 ```
