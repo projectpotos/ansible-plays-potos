@@ -26,7 +26,7 @@
 
     - name: get required roles with ansible galaxy
       ansible.builtin.command:
-        cmd: '/usr/bin/ansible-galaxy install -f -r requirements.yml -p roles/'
+        cmd: 'ansible-galaxy install -f -r requirements.yml -p roles/'
       changed_when: false
       tags:
         - always
