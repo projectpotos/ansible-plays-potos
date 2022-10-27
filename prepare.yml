@@ -5,7 +5,7 @@
   connection: local
   become: True
   gather_facts: False
-  ignore_errors: True
+  ignore_errors: False
 
   pre_tasks:
     - name: read specs repo configuration
@@ -83,7 +83,7 @@
 
         - name: Create parent dir for vars
           ansible.builtin.file:
-            path: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/all\2") | dirname}}'
+            path: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/localhost\2") | dirname}}'
             state: 'directory'
             recurse: yes
           loop: '{{ potos_playbook_specs_vars.files | map(attribute="path") | list }}'
@@ -91,7 +91,7 @@
         - name: Copy vars
           ansible.builtin.copy:
             src: '{{ item }}'
-            dest: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/all\2") }}'
+            dest: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/localhost\2") }}'
           loop: '{{ potos_playbook_specs_vars.files | map(attribute="path") | list }}'
 
         - name: Install required collections
