@@ -53,3 +53,9 @@
       owner: root
       group: root
       mode: '0644'
+
+  - name: Create log dir
+    ansible.builtin.file:
+      path: '/var/log/potos'
+      state: directory
+      recurse: yes
