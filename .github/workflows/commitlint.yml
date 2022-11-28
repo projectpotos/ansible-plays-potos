@@ -1,0 +1,11 @@
+---
+
+name: Lint Commit message
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  commitlint:
+    uses: projectpotos/.github/.github/workflows/commit-lint.yml@main
