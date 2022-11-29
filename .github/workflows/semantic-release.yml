@@ -1,0 +1,12 @@
+---
+
+name: Semantic Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  semanticrelease:
+    uses: projectpotos/.github/.github/workflows/semantic-release.yml@main
