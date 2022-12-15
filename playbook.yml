@@ -12,6 +12,12 @@
     potos_runtype: 'daily'
 
   pre_tasks:
+    - name: read specs repo configuration
+      ansible.builtin.include_vars:
+        file: '/etc/potos/specs_repo.yml'
+        name: potos_specs
+      tags:
+        - always
     # To make sure that this task always executes, it is tagged with the special
     # tag "always". Therefore do not remove this tag!
     - name: template requirements.yml file
