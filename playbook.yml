@@ -18,6 +18,13 @@
         name: potos_specs
       tags:
         - always
+
+    - name: define client_name
+      ansible.builtin.set_fact:
+        potos_plays_client_full_name: "{{ potos_specs.client_name }}"
+        potos_plays_client_name: "{{ potos_specs.client_short_name | default(potos_specs.client_name.split() | first) | lower }}"
+        potos_plays_client_short_name: "{{ potos_specs.client_short_name | default(potos_specs.client_name.split() | first) | lower }}"
+
     # To make sure that this task always executes, it is tagged with the special
     # tag "always". Therefore do not remove this tag!
     - name: template requirements.yml file
