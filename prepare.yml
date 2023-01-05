@@ -17,6 +17,9 @@
         repo: '{{ potos_specs.git_url }}/{{ potos_specs.git_repo }}.git'
         dest: '{{ playbook_dir }}/specs'
         version: '{{ potos_specs.git_branch }}'
+        key_file: '{% if potos_specs.git_ssh_key is defined and potos_specs.git_ssh_key %}/etc/potos/specs_key{% else %}{{omit}}{% endif %}'
+        accept_newhostkey: true
+        single_branch: true
       changed_when: False
       failed_when: False
   tasks:
