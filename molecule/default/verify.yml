@@ -5,10 +5,10 @@
   gather_facts: no
 
   tasks:
-  - name: check if some wallpapers exists
-    ansible.builtin.shell:
-      cmd: ls -p /usr/share/backgrounds | grep -v / | wc -l
-    register: out
-    changed_when: false
-    failed_when:
-      - out.stdout == '0'
+    - name: check if some wallpapers exists
+      ansible.builtin.shell:
+        cmd: ls -p /usr/share/backgrounds | grep -v / | wc -l
+      register: out
+      changed_when: false
+      failed_when:
+        - out.stdout == '0'
