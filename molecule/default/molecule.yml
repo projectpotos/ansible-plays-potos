@@ -8,7 +8,7 @@ driver:
 
 platforms:
   - name: instance
-    image: ghcr.io/projectpotos/ubuntu22-ansible-test:latest
+    image: ghcr.io/projectpotos/${MOLECULE_DISTRO}-ansible-test:latest
     pre_build_image: yes
     command: /lib/systemd/systemd
     privileged: yes
