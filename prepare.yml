@@ -17,7 +17,7 @@
         repo: '{{ potos_specs.git_url }}/{{ potos_specs.git_repo }}.git'
         dest: '{{ playbook_dir }}/specs'
         version: '{{ potos_specs.git_branch }}'
-        key_file: '{% if potos_specs.git_ssh_key is defined and potos_specs.git_ssh_key %}/etc/potos/specs_key{% else %}{{omit}}{% endif %}'
+        key_file: '{% if potos_specs.git_ssh_key is defined and potos_specs.git_ssh_key %}/etc/potos/specs_key{% else %}{{ omit }}{% endif %}'
         accept_newhostkey: true
         single_branch: true
       changed_when: False
@@ -33,7 +33,7 @@
         msg: 'Unable to find an potos specs repo for {{ potos_specs.client_name }}'
       when: not check_potos_specs.stat.exists
 
-    - name: Configure playbook for {{ potos_client_name }} with specs
+    - name: Configure playbook with specs for {{ potos_client_name }}
       when: check_potos_specs.stat.exists
       block:
 
@@ -46,7 +46,7 @@
 
         - name: Create parent dir for templates
           ansible.builtin.file:
-            path: '{{ item | regex_replace("^(.*?)\/specs\/templates(.*?)(\.j2)$", "\1\2") | dirname}}'
+            path: '{{ item | regex_replace("^(.*?)\/specs\/templates(.*?)(\.j2)$", "\1\2") | dirname }}'
             state: 'directory'
             recurse: yes
           loop: '{{ potos_playbook_specs_templates.files | map(attribute="path") | list }}'
@@ -55,6 +55,9 @@
           ansible.builtin.template:
             src: '{{ item }}'
             dest: '{{ item | regex_replace("^(.*?)\/specs\/templates(.*?)(\.j2)$", "\1\2") }}'
+            mode: 0444
+            owner: root
+            group: root
           loop: '{{ potos_playbook_specs_templates.files | map(attribute="path") | list }}'
 
         - name: Get files to copy
@@ -66,7 +69,7 @@
 
         - name: Create parent dir for files
           ansible.builtin.file:
-            path: '{{ item | regex_replace("^(.*?)\/specs\/files(.*?)$", "\1\2") | dirname}}'
+            path: '{{ item | regex_replace("^(.*?)\/specs\/files(.*?)$", "\1\2") | dirname }}'
             state: 'directory'
             recurse: yes
           loop: '{{ potos_playbook_specs_files.files | map(attribute="path") | list }}'
@@ -75,6 +78,9 @@
           ansible.builtin.copy:
             src: '{{ item }}'
             dest: '{{ item | regex_replace("^(.*?)\/specs\/files(.*?)$", "\1\2") }}'
+            mode: 0444
+            owner: root
+            group: root
           loop: '{{ potos_playbook_specs_files.files | map(attribute="path") | list }}'
 
         - name: Get vars to copy
@@ -86,7 +92,7 @@
 
         - name: Create parent dir for vars
           ansible.builtin.file:
-            path: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/localhost\2") | dirname}}'
+            path: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/localhost\2") | dirname }}'
             state: 'directory'
             recurse: yes
           loop: '{{ potos_playbook_specs_vars.files | map(attribute="path") | list }}'
@@ -95,6 +101,9 @@
           ansible.builtin.copy:
             src: '{{ item }}'
             dest: '{{ item | regex_replace("^(.*?)\/specs\/vars(.*?)$", "\1/host_vars/localhost\2") }}'
+            mode: 0444
+            owner: root
+            group: root
           loop: '{{ potos_playbook_specs_vars.files | map(attribute="path") | list }}'
 
         - name: Install required collections
