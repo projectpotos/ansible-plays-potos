@@ -9,11 +9,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-20.04
-    strategy:
-      matrix:
-        distro:
-          - ubuntu20
-          - ubuntu22
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -36,6 +31,3 @@ jobs:
         run: |
           molecule destroy
           molecule test
-        env:
-          MOLECULE_DISTRO: ${{ matrix.distro }}
-
