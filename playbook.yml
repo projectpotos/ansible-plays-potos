@@ -96,10 +96,10 @@
 
         - name: write temp file with roles to be loaded from ansible-galaxy
           ansible.builtin.copy:
-            content: "{{ potos_roles_galaxy | to_yaml }}"
+            content: "{{ potos_roles_galaxy | default([]) | to_yaml }}"
             dest: "{{ potos_plays_galaxy_temp.path }}"
             mode: 0644
-            user: root
+            owner: root
             group: root
           when: potos_roles_galaxy is defined
 
