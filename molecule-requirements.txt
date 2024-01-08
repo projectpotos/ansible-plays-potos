@@ -1,6 +1,7 @@
 
 # At least Ansible 2.12 is needed due to used features like 'argument_specs'
-ansible>=2.12
+# 2.12.10 fixes an issue with installing ansible-galaxy collections
+ansible>=2.12.10
 
 ## ansible/yaml lint
 ansible-lint~=6.22.1
