@@ -4,7 +4,7 @@
 ansible>=2.12.10
 
 ## ansible/yaml lint
-ansible-lint~=6.22.1
+ansible-lint~=6.22.2
 yamllint~=1.33.0
 
 ## molecule tests
